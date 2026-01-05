@@ -24,6 +24,23 @@ function nextNonRepeatingIndex(length, currentIndex) {
   return next;
 }
 
+/**
+ * Creates a short "initials" fallback for a book title.
+ * Example: "The Silent Patient" => "TS"
+ */
+function bookTitleInitials(title) {
+  if (!title) return '?';
+  const words = title
+    .trim()
+    .split(/\s+/)
+    .filter(Boolean);
+
+  if (!words.length) return '?';
+  if (words.length === 1) return words[0].slice(0, 2).toUpperCase();
+
+  return `${words[0][0] || ''}${words[1][0] || ''}`.toUpperCase();
+}
+
 function Header() {
   return (
     <header className="bw-header">
@@ -45,7 +62,10 @@ function Header() {
           <NavLink to="/trending" className={({ isActive }) => `bw-nav__link ${isActive ? 'is-active' : ''}`}>
             Trending
           </NavLink>
-          <NavLink to="/auth" className={({ isActive }) => `bw-nav__link bw-nav__link--cta ${isActive ? 'is-active' : ''}`}>
+          <NavLink
+            to="/auth"
+            className={({ isActive }) => `bw-nav__link bw-nav__link--cta ${isActive ? 'is-active' : ''}`}
+          >
             Sign In / Login
           </NavLink>
         </nav>
@@ -79,15 +99,39 @@ function Footer() {
   );
 }
 
+function BookCardCover({ title, author, coverImageUrl }) {
+  const [imageFailed, setImageFailed] = useState(false);
+
+  const showImage = Boolean(coverImageUrl) && !imageFailed;
+  const initials = useMemo(() => bookTitleInitials(title), [title]);
+
+  return (
+    <div className="bw-card__cover" aria-label={`Cover for ${title}`}>
+      {showImage ? (
+        <img
+          className="bw-card__coverImg"
+          src={coverImageUrl}
+          alt={`Cover of ${title}`}
+          loading="lazy"
+          onError={() => setImageFailed(true)}
+        />
+      ) : (
+        <div className="bw-card__coverFallback" aria-hidden="true">
+          <div className="bw-card__coverFallbackInitials">{initials}</div>
+          <div className="bw-card__coverFallbackMeta">
+            <div className="bw-card__coverTitle">{title}</div>
+            <div className="bw-card__coverAuthor">{author}</div>
+          </div>
+        </div>
+      )}
+    </div>
+  );
+}
+
 function BookCard({ book }) {
   return (
-    <article className="bw-card" aria-label={`${book.title} by ${book.author}`}>
-      <div className="bw-card__cover" aria-hidden="true">
-        <div className="bw-card__coverInner">
-          <div className="bw-card__coverTitle">{book.title}</div>
-          <div className="bw-card__coverAuthor">{book.author}</div>
-        </div>
-      </div>
+    <article className="bw-card bw-card--interactive" aria-label={`${book.title} by ${book.author}`}>
+      <BookCardCover title={book.title} author={book.author} coverImageUrl={book.coverImageUrl} />
 
       <div className="bw-card__body">
         <div className="bw-card__title">{book.title}</div>
@@ -406,26 +450,124 @@ function App() {
 
   const trendingBooks = useMemo(
     () => [
-      { id: 't1', title: 'The Silent Patient', author: 'Alex Michaelides', tag: 'Thriller', genre: 'Crime & Thriller' },
-      { id: 't2', title: 'Atomic Habits', author: 'James Clear', tag: 'Self-Help', genre: 'Non-Fiction' },
-      { id: 't3', title: 'The Alchemist', author: 'Paulo Coelho', tag: 'Classic', genre: 'Fiction' },
-      { id: 't4', title: 'Ikigai', author: 'Héctor García', tag: 'Wellness', genre: 'Non-Fiction' },
-      { id: 't5', title: 'The Girl on the Train', author: 'Paula Hawkins', tag: 'Suspense', genre: 'Crime & Thriller' },
-      { id: 't6', title: 'Sapiens', author: 'Yuval Noah Harari', tag: 'History', genre: 'Non-Fiction' },
-      { id: 't7', title: 'Norwegian Wood', author: 'Haruki Murakami', tag: 'Literary', genre: 'Fiction' }
+      {
+        id: 't1',
+        title: 'The Silent Patient',
+        author: 'Alex Michaelides',
+        tag: 'Thriller',
+        genre: 'Crime & Thriller',
+        coverImageUrl: 'https://picsum.photos/seed/bworm-silent-patient/480/720'
+      },
+      {
+        id: 't2',
+        title: 'Atomic Habits',
+        author: 'James Clear',
+        tag: 'Self-Help',
+        genre: 'Non-Fiction',
+        coverImageUrl: 'https://picsum.photos/seed/bworm-atomic-habits/480/720'
+      },
+      {
+        id: 't3',
+        title: 'The Alchemist',
+        author: 'Paulo Coelho',
+        tag: 'Classic',
+        genre: 'Fiction',
+        coverImageUrl: 'https://picsum.photos/seed/bworm-the-alchemist/480/720'
+      },
+      {
+        id: 't4',
+        title: 'Ikigai',
+        author: 'Héctor García',
+        tag: 'Wellness',
+        genre: 'Non-Fiction',
+        coverImageUrl: 'https://picsum.photos/seed/bworm-ikigai/480/720'
+      },
+      {
+        id: 't5',
+        title: 'The Girl on the Train',
+        author: 'Paula Hawkins',
+        tag: 'Suspense',
+        genre: 'Crime & Thriller',
+        coverImageUrl: 'https://picsum.photos/seed/bworm-girl-on-train/480/720'
+      },
+      {
+        id: 't6',
+        title: 'Sapiens',
+        author: 'Yuval Noah Harari',
+        tag: 'History',
+        genre: 'Non-Fiction',
+        coverImageUrl: 'https://picsum.photos/seed/bworm-sapiens/480/720'
+      },
+      {
+        id: 't7',
+        title: 'Norwegian Wood',
+        author: 'Haruki Murakami',
+        tag: 'Literary',
+        genre: 'Fiction',
+        coverImageUrl: 'https://picsum.photos/seed/bworm-norwegian-wood/480/720'
+      }
     ],
     []
   );
 
   const bestSellers = useMemo(
     () => [
-      { id: 'b1', title: 'Where the Crawdads Sing', author: 'Delia Owens', tag: 'Fiction', genre: 'Fiction' },
-      { id: 'b2', title: 'Educated', author: 'Tara Westover', tag: 'Memoir', genre: 'Non-Fiction' },
-      { id: 'b3', title: 'Becoming', author: 'Michelle Obama', tag: 'Biography', genre: 'Non-Fiction' },
-      { id: 'b4', title: 'The Kite Runner', author: 'Khaled Hosseini', tag: 'Fiction', genre: 'Fiction' },
-      { id: 'b5', title: 'The Da Vinci Code', author: 'Dan Brown', tag: 'Mystery', genre: 'Crime & Thriller' },
-      { id: 'b6', title: 'Thinking, Fast and Slow', author: 'Daniel Kahneman', tag: 'Business', genre: 'Non-Fiction' },
-      { id: 'b7', title: 'The Midnight Library', author: 'Matt Haig', tag: 'Fiction', genre: 'Fiction' }
+      {
+        id: 'b1',
+        title: 'Where the Crawdads Sing',
+        author: 'Delia Owens',
+        tag: 'Fiction',
+        genre: 'Fiction',
+        coverImageUrl: 'https://picsum.photos/seed/bworm-crawdads/480/720'
+      },
+      {
+        id: 'b2',
+        title: 'Educated',
+        author: 'Tara Westover',
+        tag: 'Memoir',
+        genre: 'Non-Fiction',
+        coverImageUrl: 'https://picsum.photos/seed/bworm-educated/480/720'
+      },
+      {
+        id: 'b3',
+        title: 'Becoming',
+        author: 'Michelle Obama',
+        tag: 'Biography',
+        genre: 'Non-Fiction',
+        coverImageUrl: 'https://picsum.photos/seed/bworm-becoming/480/720'
+      },
+      {
+        id: 'b4',
+        title: 'The Kite Runner',
+        author: 'Khaled Hosseini',
+        tag: 'Fiction',
+        genre: 'Fiction',
+        coverImageUrl: 'https://picsum.photos/seed/bworm-kite-runner/480/720'
+      },
+      {
+        id: 'b5',
+        title: 'The Da Vinci Code',
+        author: 'Dan Brown',
+        tag: 'Mystery',
+        genre: 'Crime & Thriller',
+        coverImageUrl: 'https://picsum.photos/seed/bworm-da-vinci/480/720'
+      },
+      {
+        id: 'b6',
+        title: 'Thinking, Fast and Slow',
+        author: 'Daniel Kahneman',
+        tag: 'Business',
+        genre: 'Non-Fiction',
+        coverImageUrl: 'https://picsum.photos/seed/bworm-thinking-fast-slow/480/720'
+      },
+      {
+        id: 'b7',
+        title: 'The Midnight Library',
+        author: 'Matt Haig',
+        tag: 'Fiction',
+        genre: 'Fiction',
+        coverImageUrl: 'https://picsum.photos/seed/bworm-midnight-library/480/720'
+      }
     ],
     []
   );
