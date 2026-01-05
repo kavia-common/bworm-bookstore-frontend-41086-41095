@@ -1,0 +1,4 @@
+{
+    "command": "npm run test",
+    "working_directory": "/home/kavia/workspace/code-generation/bworm-bookstore-frontend-41086-41095/frontend_bworm"
+}
