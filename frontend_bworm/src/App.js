@@ -132,38 +132,27 @@ function WelcomeHero({ quote }) {
         <div className="bw-hero__panel">
           <div className="bw-hero__panelTitle">Minimal. Modern. Book-first.</div>
 
-          <div className="bw-hero__filters" aria-label="Quick categories">
-            <Link to="/trending" className="bw-hero__filter">
-              Trending
-            </Link>
-            <Link to="/global" className="bw-hero__filter">
-              Global
-            </Link>
-            <Link to="/genres" className="bw-hero__filter">
-              Genres
-            </Link>
-            <Link to="/fast" className="bw-hero__filter">
-              Fast
-            </Link>
-          </div>
-
-          <div className="bw-hero__panelGrid" aria-hidden="true">
-            <div className="bw-miniStat">
+          {/* Keep only the original box icons/tiles (no extra small hero filter links). */}
+          <div className="bw-hero__panelGrid" aria-label="Quick categories">
+            <Link to="/trending" className="bw-miniStat bw-miniStat--link" aria-label="Open Trending listing">
               <div className="bw-miniStat__value">Trending</div>
               <div className="bw-miniStat__label">Fresh picks updated often</div>
-            </div>
-            <div className="bw-miniStat">
+            </Link>
+
+            <Link to="/global" className="bw-miniStat bw-miniStat--link" aria-label="Open Global listing">
               <div className="bw-miniStat__value">Global</div>
               <div className="bw-miniStat__label">Best sellers worldwide</div>
-            </div>
-            <div className="bw-miniStat">
+            </Link>
+
+            <Link to="/genres" className="bw-miniStat bw-miniStat--link" aria-label="Browse Genres">
               <div className="bw-miniStat__value">Genres</div>
               <div className="bw-miniStat__label">Fiction to thrillers</div>
-            </div>
-            <div className="bw-miniStat">
+            </Link>
+
+            <Link to="/fast" className="bw-miniStat bw-miniStat--link" aria-label="Open Fast browse listing">
               <div className="bw-miniStat__value">Fast</div>
               <div className="bw-miniStat__label">Simple browsing experience</div>
-            </div>
+            </Link>
           </div>
         </div>
       </div>

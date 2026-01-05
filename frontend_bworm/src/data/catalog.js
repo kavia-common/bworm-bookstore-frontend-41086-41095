@@ -98,7 +98,8 @@ export const trendingBooks = [
     author: 'Morgan Housel',
     tag: 'Personal Finance',
     genreSlug: 'non-fiction',
-    coverImageUrl: 'https://covers.openlibrary.org/b/isbn/9780857197689-L.jpg'
+    coverImageUrl: 'https://covers.openlibrary.org/b/isbn/9780857197689-L.jpg',
+    price: 159
   },
   {
     id: 't9',
@@ -114,7 +115,8 @@ export const trendingBooks = [
     author: 'Richard Osman',
     tag: 'Mystery',
     genreSlug: 'crime-thriller',
-    coverImageUrl: 'https://covers.openlibrary.org/b/isbn/9780241988268-L.jpg'
+    coverImageUrl: 'https://covers.openlibrary.org/b/isbn/9780241988268-L.jpg',
+    price: 200
   },
   {
     id: 't11',
@@ -131,6 +133,30 @@ export const trendingBooks = [
     tag: 'Sci-Fi',
     genreSlug: 'fiction',
     coverImageUrl: 'https://covers.openlibrary.org/b/isbn/9780593135204-L.jpg'
+  },
+  {
+    id: 't13',
+    title: 'The Midnight Library',
+    author: 'Matt Haig',
+    tag: 'Fiction',
+    genreSlug: 'fiction',
+    coverImageUrl: 'https://covers.openlibrary.org/b/isbn/9780525559474-L.jpg'
+  },
+  {
+    id: 't14',
+    title: 'Dark Matter',
+    author: 'Blake Crouch',
+    tag: 'Thriller',
+    genreSlug: 'crime-thriller',
+    coverImageUrl: 'https://covers.openlibrary.org/b/isbn/9781101904220-L.jpg'
+  },
+  {
+    id: 't15',
+    title: 'Deep Work',
+    author: 'Cal Newport',
+    tag: 'Productivity',
+    genreSlug: 'non-fiction',
+    coverImageUrl: 'https://covers.openlibrary.org/b/isbn/9781455586691-L.jpg'
   }
 ].map(normalizeBook);
 
@@ -207,7 +233,8 @@ export const globalBestSellers = [
     author: 'Fredrik Backman',
     tag: 'Fiction',
     genreSlug: 'international-best-sellers',
-    coverImageUrl: 'https://covers.openlibrary.org/b/isbn/9781476738024-L.jpg'
+    coverImageUrl: 'https://covers.openlibrary.org/b/isbn/9781476738024-L.jpg',
+    price: 159
   },
   {
     id: 'g10',
@@ -231,7 +258,32 @@ export const globalBestSellers = [
     author: 'Charles Duhigg',
     tag: 'Business',
     genreSlug: 'international-best-sellers',
-    coverImageUrl: 'https://covers.openlibrary.org/b/isbn/9780812981605-L.jpg'
+    coverImageUrl: 'https://covers.openlibrary.org/b/isbn/9780812981605-L.jpg',
+    price: 200
+  },
+  {
+    id: 'g13',
+    title: 'Pachinko',
+    author: 'Min Jin Lee',
+    tag: 'Fiction',
+    genreSlug: 'international-best-sellers',
+    coverImageUrl: 'https://covers.openlibrary.org/b/isbn/9781455563920-L.jpg'
+  },
+  {
+    id: 'g14',
+    title: 'The Name of the Wind',
+    author: 'Patrick Rothfuss',
+    tag: 'Fantasy',
+    genreSlug: 'international-best-sellers',
+    coverImageUrl: 'https://covers.openlibrary.org/b/isbn/9780756404741-L.jpg'
+  },
+  {
+    id: 'g15',
+    title: 'The Little Prince',
+    author: 'Antoine de Saint-Exupéry',
+    tag: 'Classic',
+    genreSlug: 'international-best-sellers',
+    coverImageUrl: 'https://covers.openlibrary.org/b/isbn/9780156013987-L.jpg'
   }
 ].map(normalizeBook);
 
