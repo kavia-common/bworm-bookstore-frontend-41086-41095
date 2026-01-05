@@ -32,8 +32,6 @@ function nextNonRepeatingIndex(length, currentIndex) {
 }
 
 function Header() {
-  const { derived } = useShopStore();
-
   return (
     <header className="bw-header">
       <div className="bw-header__inner">
@@ -51,35 +49,13 @@ function Header() {
           <NavLink to="/search" className={({ isActive }) => `bw-nav__link ${isActive ? 'is-active' : ''}`}>
             Search
           </NavLink>
-          <NavLink to="/trending" className={({ isActive }) => `bw-nav__link ${isActive ? 'is-active' : ''}`}>
-            Trending
-          </NavLink>
-          <NavLink to="/global" className={({ isActive }) => `bw-nav__link ${isActive ? 'is-active' : ''}`}>
-            Global
-          </NavLink>
-          <NavLink to="/genres" className={({ isActive }) => `bw-nav__link ${isActive ? 'is-active' : ''}`}>
-            Genres
-          </NavLink>
-          <NavLink to="/fast" className={({ isActive }) => `bw-nav__link ${isActive ? 'is-active' : ''}`}>
-            Fast
+
+          <NavLink to="/wishlist" className={({ isActive }) => `bw-nav__link ${isActive ? 'is-active' : ''}`}>
+            Wishlist
           </NavLink>
 
-          <NavLink
-            to="/wishlist"
-            className={({ isActive }) => `bw-nav__link ${isActive ? 'is-active' : ''}`}
-          >
-            <span className="bw-nav__linkWithBadge">
-              Wishlist <span className="bw-badge">{derived.wishlistCount}</span>
-            </span>
-          </NavLink>
-
-          <NavLink
-            to="/cart"
-            className={({ isActive }) => `bw-nav__link ${isActive ? 'is-active' : ''}`}
-          >
-            <span className="bw-nav__linkWithBadge">
-              Cart <span className="bw-badge">{derived.cartCount}</span>
-            </span>
+          <NavLink to="/cart" className={({ isActive }) => `bw-nav__link ${isActive ? 'is-active' : ''}`}>
+            Cart
           </NavLink>
 
           <NavLink
@@ -153,9 +129,25 @@ function WelcomeHero({ quote }) {
           </div>
         </div>
 
-        <div className="bw-hero__panel" aria-hidden="true">
+        <div className="bw-hero__panel">
           <div className="bw-hero__panelTitle">Minimal. Modern. Book-first.</div>
-          <div className="bw-hero__panelGrid">
+
+          <div className="bw-hero__filters" aria-label="Quick categories">
+            <Link to="/trending" className="bw-hero__filter">
+              Trending
+            </Link>
+            <Link to="/global" className="bw-hero__filter">
+              Global
+            </Link>
+            <Link to="/genres" className="bw-hero__filter">
+              Genres
+            </Link>
+            <Link to="/fast" className="bw-hero__filter">
+              Fast
+            </Link>
+          </div>
+
+          <div className="bw-hero__panelGrid" aria-hidden="true">
             <div className="bw-miniStat">
               <div className="bw-miniStat__value">Trending</div>
               <div className="bw-miniStat__label">Fresh picks updated often</div>

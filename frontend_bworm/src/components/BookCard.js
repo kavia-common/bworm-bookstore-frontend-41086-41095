@@ -55,7 +55,6 @@ export default function BookCard({ book }) {
   const { state, actions } = useShopStore();
 
   const inWishlist = state.wishlistIds.includes(book.id);
-  const cartQty = state.cartById[book.id] || 0;
 
   return (
     <article className="bw-card bw-card--interactive" aria-label={`${book.title} by ${book.author}`}>
@@ -96,7 +95,7 @@ export default function BookCard({ book }) {
             onClick={() => actions.addToCart(book.id)}
             aria-label="Add to cart"
           >
-            Add to Cart{cartQty ? ` (${cartQty})` : ''}
+            Add to Cart
           </button>
         </div>
       </div>

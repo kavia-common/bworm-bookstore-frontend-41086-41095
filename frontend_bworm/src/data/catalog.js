@@ -1,9 +1,9 @@
-const PRICE_MIN = 179;
-const PRICE_MAX = 250;
+const ALLOWED_PRICES = [179, 199, 239, 249];
 
 /**
- * Generates a stable-ish price in the required range (179–250) based on a string seed.
- * This avoids hardcoding a price for every item while ensuring consistency across views.
+ * Picks a stable-but-varied price from the allowed set based on a string seed.
+ * This keeps prices deterministic on initial load while ensuring the catalog
+ * isn't monotonically increasing/decreasing.
  */
 function priceFromSeed(seed) {
   const str = String(seed || '');
@@ -11,8 +11,7 @@ function priceFromSeed(seed) {
   for (let i = 0; i < str.length; i += 1) {
     hash = (hash * 31 + str.charCodeAt(i)) % 1000000007;
   }
-  const span = PRICE_MAX - PRICE_MIN + 1;
-  return PRICE_MIN + (hash % span);
+  return ALLOWED_PRICES[hash % ALLOWED_PRICES.length];
 }
 
 /**
