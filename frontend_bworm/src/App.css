@@ -328,9 +328,11 @@
 }
 
 .bw-card__cover {
-  /* Cover-like aspect ratio (2:3) while staying responsive */
+  /* Medium cover size with a consistent 2:3 ratio while staying responsive */
   aspect-ratio: 2 / 3;
   width: 100%;
+  max-width: 160px; /* medium visual size inside each card */
+  margin: 0 auto; /* center cover within the card */
   background: linear-gradient(135deg, rgba(55, 65, 81, 0.16), rgba(55, 65, 81, 0.03));
   display: flex;
   align-items: stretch;

@@ -456,7 +456,7 @@ function App() {
         author: 'Alex Michaelides',
         tag: 'Thriller',
         genre: 'Crime & Thriller',
-        coverImageUrl: 'https://picsum.photos/seed/bworm-silent-patient/480/720'
+        coverImageUrl: 'https://covers.openlibrary.org/b/isbn/9781250301697-L.jpg'
       },
       {
         id: 't2',
@@ -464,7 +464,7 @@ function App() {
         author: 'James Clear',
         tag: 'Self-Help',
         genre: 'Non-Fiction',
-        coverImageUrl: 'https://picsum.photos/seed/bworm-atomic-habits/480/720'
+        coverImageUrl: 'https://covers.openlibrary.org/b/isbn/9780735211292-L.jpg'
       },
       {
         id: 't3',
@@ -472,7 +472,7 @@ function App() {
         author: 'Paulo Coelho',
         tag: 'Classic',
         genre: 'Fiction',
-        coverImageUrl: 'https://picsum.photos/seed/bworm-the-alchemist/480/720'
+        coverImageUrl: 'https://covers.openlibrary.org/b/isbn/9780061122415-L.jpg'
       },
       {
         id: 't4',
@@ -480,7 +480,7 @@ function App() {
         author: 'Héctor García',
         tag: 'Wellness',
         genre: 'Non-Fiction',
-        coverImageUrl: 'https://picsum.photos/seed/bworm-ikigai/480/720'
+        coverImageUrl: 'https://covers.openlibrary.org/b/isbn/9780143130727-L.jpg'
       },
       {
         id: 't5',
@@ -488,7 +488,7 @@ function App() {
         author: 'Paula Hawkins',
         tag: 'Suspense',
         genre: 'Crime & Thriller',
-        coverImageUrl: 'https://picsum.photos/seed/bworm-girl-on-train/480/720'
+        coverImageUrl: 'https://covers.openlibrary.org/b/isbn/9781594633669-L.jpg'
       },
       {
         id: 't6',
@@ -496,7 +496,7 @@ function App() {
         author: 'Yuval Noah Harari',
         tag: 'History',
         genre: 'Non-Fiction',
-        coverImageUrl: 'https://picsum.photos/seed/bworm-sapiens/480/720'
+        coverImageUrl: 'https://covers.openlibrary.org/b/isbn/9780062316110-L.jpg'
       },
       {
         id: 't7',
@@ -504,7 +504,7 @@ function App() {
         author: 'Haruki Murakami',
         tag: 'Literary',
         genre: 'Fiction',
-        coverImageUrl: 'https://picsum.photos/seed/bworm-norwegian-wood/480/720'
+        coverImageUrl: 'https://covers.openlibrary.org/b/isbn/9780375704024-L.jpg'
       }
     ],
     []
@@ -518,7 +518,7 @@ function App() {
         author: 'Delia Owens',
         tag: 'Fiction',
         genre: 'Fiction',
-        coverImageUrl: 'https://picsum.photos/seed/bworm-crawdads/480/720'
+        coverImageUrl: 'https://covers.openlibrary.org/b/isbn/9780735219090-L.jpg'
       },
       {
         id: 'b2',
@@ -526,7 +526,7 @@ function App() {
         author: 'Tara Westover',
         tag: 'Memoir',
         genre: 'Non-Fiction',
-        coverImageUrl: 'https://picsum.photos/seed/bworm-educated/480/720'
+        coverImageUrl: 'https://covers.openlibrary.org/b/isbn/9780399590504-L.jpg'
       },
       {
         id: 'b3',
@@ -534,7 +534,7 @@ function App() {
         author: 'Michelle Obama',
         tag: 'Biography',
         genre: 'Non-Fiction',
-        coverImageUrl: 'https://picsum.photos/seed/bworm-becoming/480/720'
+        coverImageUrl: 'https://covers.openlibrary.org/b/isbn/9781524763138-L.jpg'
       },
       {
         id: 'b4',
@@ -542,7 +542,7 @@ function App() {
         author: 'Khaled Hosseini',
         tag: 'Fiction',
         genre: 'Fiction',
-        coverImageUrl: 'https://picsum.photos/seed/bworm-kite-runner/480/720'
+        coverImageUrl: 'https://covers.openlibrary.org/b/isbn/9781594480003-L.jpg'
       },
       {
         id: 'b5',
@@ -550,7 +550,7 @@ function App() {
         author: 'Dan Brown',
         tag: 'Mystery',
         genre: 'Crime & Thriller',
-        coverImageUrl: 'https://picsum.photos/seed/bworm-da-vinci/480/720'
+        coverImageUrl: 'https://covers.openlibrary.org/b/isbn/9780307474278-L.jpg'
       },
       {
         id: 'b6',
@@ -558,7 +558,7 @@ function App() {
         author: 'Daniel Kahneman',
         tag: 'Business',
         genre: 'Non-Fiction',
-        coverImageUrl: 'https://picsum.photos/seed/bworm-thinking-fast-slow/480/720'
+        coverImageUrl: 'https://covers.openlibrary.org/b/isbn/9780374533557-L.jpg'
       },
       {
         id: 'b7',
@@ -566,7 +566,7 @@ function App() {
         author: 'Matt Haig',
         tag: 'Fiction',
         genre: 'Fiction',
-        coverImageUrl: 'https://picsum.photos/seed/bworm-midnight-library/480/720'
+        coverImageUrl: 'https://covers.openlibrary.org/b/isbn/9780525559474-L.jpg'
       }
     ],
     []
