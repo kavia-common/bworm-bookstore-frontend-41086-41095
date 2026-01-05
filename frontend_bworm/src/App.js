@@ -1,6 +1,13 @@
 import React, { useEffect, useMemo, useState } from 'react';
-import { Link, NavLink, Route, Routes, useNavigate, useParams } from 'react-router-dom';
+import { Link, NavLink, Route, Routes } from 'react-router-dom';
 import './App.css';
+
+import BookCard from './components/BookCard';
+import ListingPage from './pages/ListingPage';
+import GenresHubPage from './pages/GenresHubPage';
+import GenreListingPage from './pages/GenreListingPage';
+import { ShopStoreProvider, useShopStore } from './store/shopStore';
+import { genres, globalBestSellers, trendingBooks, getAllBooks } from './data/catalog';
 
 /**
  * Ocean Professional minimalist theme:
@@ -24,24 +31,9 @@ function nextNonRepeatingIndex(length, currentIndex) {
   return next;
 }
 
-/**
- * Creates a short "initials" fallback for a book title.
- * Example: "The Silent Patient" => "TS"
- */
-function bookTitleInitials(title) {
-  if (!title) return '?';
-  const words = title
-    .trim()
-    .split(/\s+/)
-    .filter(Boolean);
-
-  if (!words.length) return '?';
-  if (words.length === 1) return words[0].slice(0, 2).toUpperCase();
-
-  return `${words[0][0] || ''}${words[1][0] || ''}`.toUpperCase();
-}
-
 function Header() {
+  const { derived } = useShopStore();
+
   return (
     <header className="bw-header">
       <div className="bw-header__inner">
@@ -62,6 +54,34 @@ function Header() {
           <NavLink to="/trending" className={({ isActive }) => `bw-nav__link ${isActive ? 'is-active' : ''}`}>
             Trending
           </NavLink>
+          <NavLink to="/global" className={({ isActive }) => `bw-nav__link ${isActive ? 'is-active' : ''}`}>
+            Global
+          </NavLink>
+          <NavLink to="/genres" className={({ isActive }) => `bw-nav__link ${isActive ? 'is-active' : ''}`}>
+            Genres
+          </NavLink>
+          <NavLink to="/fast" className={({ isActive }) => `bw-nav__link ${isActive ? 'is-active' : ''}`}>
+            Fast
+          </NavLink>
+
+          <NavLink
+            to="/wishlist"
+            className={({ isActive }) => `bw-nav__link ${isActive ? 'is-active' : ''}`}
+          >
+            <span className="bw-nav__linkWithBadge">
+              Wishlist <span className="bw-badge">{derived.wishlistCount}</span>
+            </span>
+          </NavLink>
+
+          <NavLink
+            to="/cart"
+            className={({ isActive }) => `bw-nav__link ${isActive ? 'is-active' : ''}`}
+          >
+            <span className="bw-nav__linkWithBadge">
+              Cart <span className="bw-badge">{derived.cartCount}</span>
+            </span>
+          </NavLink>
+
           <NavLink
             to="/auth"
             className={({ isActive }) => `bw-nav__link bw-nav__link--cta ${isActive ? 'is-active' : ''}`}
@@ -99,54 +119,6 @@ function Footer() {
   );
 }
 
-function BookCardCover({ title, author, coverImageUrl }) {
-  const [imageFailed, setImageFailed] = useState(false);
-
-  const showImage = Boolean(coverImageUrl) && !imageFailed;
-  const initials = useMemo(() => bookTitleInitials(title), [title]);
-
-  return (
-    <div className="bw-card__cover" aria-label={`Cover for ${title}`}>
-      {showImage ? (
-        <img
-          className="bw-card__coverImg"
-          src={coverImageUrl}
-          alt={`Cover of ${title}`}
-          loading="lazy"
-          onError={() => setImageFailed(true)}
-        />
-      ) : (
-        <div className="bw-card__coverFallback" aria-hidden="true">
-          <div className="bw-card__coverFallbackInitials">{initials}</div>
-          <div className="bw-card__coverFallbackMeta">
-            <div className="bw-card__coverTitle">{title}</div>
-            <div className="bw-card__coverAuthor">{author}</div>
-          </div>
-        </div>
-      )}
-    </div>
-  );
-}
-
-function BookCard({ book }) {
-  return (
-    <article className="bw-card bw-card--interactive" aria-label={`${book.title} by ${book.author}`}>
-      <BookCardCover title={book.title} author={book.author} coverImageUrl={book.coverImageUrl} />
-
-      <div className="bw-card__body">
-        <div className="bw-card__title">{book.title}</div>
-        <div className="bw-card__meta">
-          <span className="bw-card__author">{book.author}</span>
-          <span className="bw-card__dot" aria-hidden="true">
-            •
-          </span>
-          <span className="bw-card__tag">{book.tag}</span>
-        </div>
-      </div>
-    </article>
-  );
-}
-
 function SectionHeader({ title, to }) {
   return (
     <div className="bw-sectionHeader">
@@ -155,26 +127,6 @@ function SectionHeader({ title, to }) {
         See all <span aria-hidden="true">→</span>
       </Link>
     </div>
-  );
-}
-
-function Genres({ genres }) {
-  return (
-    <section className="bw-section" aria-label="Genres">
-      <div className="bw-sectionHeader">
-        <h2 className="bw-h2">Browse by Genre</h2>
-        <span className="bw-sectionHeader__hint">Find your next read</span>
-      </div>
-
-      <div className="bw-genres" role="list">
-        {genres.map((g) => (
-          <Link key={g.slug} to={`/genre/${g.slug}`} className="bw-genre" role="listitem">
-            <div className="bw-genre__title">{g.name}</div>
-            <div className="bw-genre__desc">{g.description}</div>
-          </Link>
-        ))}
-      </div>
-    </section>
   );
 }
 
@@ -227,7 +179,7 @@ function WelcomeHero({ quote }) {
   );
 }
 
-function HomePage({ quote, trendingBooks, bestSellers, genres }) {
+function HomePage({ quote }) {
   return (
     <main>
       <WelcomeHero quote={quote} />
@@ -245,9 +197,9 @@ function HomePage({ quote, trendingBooks, bestSellers, genres }) {
 
       <section className="bw-section bw-section--alt" aria-label="International Best Sellers">
         <div className="bw-container">
-          <SectionHeader title="International Best Sellers" to="/best-sellers" />
+          <SectionHeader title="International Best Sellers" to="/global" />
           <div className="bw-grid">
-            {bestSellers.slice(0, 6).map((b) => (
+            {globalBestSellers.slice(0, 6).map((b) => (
               <BookCard key={b.id} book={b} />
             ))}
           </div>
@@ -255,7 +207,22 @@ function HomePage({ quote, trendingBooks, bestSellers, genres }) {
       </section>
 
       <div className="bw-container">
-        <Genres genres={genres} />
+        <section className="bw-section" aria-label="Genres">
+          <div className="bw-sectionHeader">
+            <h2 className="bw-h2">Browse by Genre</h2>
+            <Link to="/genres" className="bw-link" aria-label="Browse all genres">
+              Browse all <span aria-hidden="true">→</span>
+            </Link>
+          </div>
+          <div className="bw-genres" role="list">
+            {genres.map((g) => (
+              <Link key={g.slug} to={`/genres/${g.slug}`} className="bw-genre" role="listitem">
+                <div className="bw-genre__title">{g.name}</div>
+                <div className="bw-genre__desc">{g.description}</div>
+              </Link>
+            ))}
+          </div>
+        </section>
       </div>
     </main>
   );
@@ -273,17 +240,17 @@ function AboutPage() {
       <div className="bw-callout">
         <div className="bw-callout__title">What’s next?</div>
         <div className="bw-callout__body">
-          Search enhancements, category pages with filters, and sign-in integration can be added once backend and auth are
-          wired up.
+          Category pages, wishlist/cart persistence, and sign-in integration can be extended once backend and auth are wired
+          up.
         </div>
       </div>
     </main>
   );
 }
 
-function SearchPage({ trendingBooks, bestSellers }) {
+function SearchPage() {
   const [query, setQuery] = useState('');
-  const dataset = useMemo(() => [...trendingBooks, ...bestSellers], [trendingBooks, bestSellers]);
+  const dataset = useMemo(() => getAllBooks(), []);
 
   const results = useMemo(() => {
     const q = query.trim().toLowerCase();
@@ -332,87 +299,6 @@ function SearchPage({ trendingBooks, bestSellers }) {
   );
 }
 
-function TrendingPage({ trendingBooks }) {
-  return (
-    <main className="bw-container bw-page">
-      <div className="bw-pageHeader">
-        <h1 className="bw-h1">Trending</h1>
-        <p className="bw-body">A quick snapshot of what readers are picking up right now.</p>
-      </div>
-
-      <div className="bw-grid">
-        {trendingBooks.map((b) => (
-          <BookCard key={b.id} book={b} />
-        ))}
-      </div>
-    </main>
-  );
-}
-
-function BestSellersPage({ bestSellers }) {
-  return (
-    <main className="bw-container bw-page">
-      <div className="bw-pageHeader">
-        <h1 className="bw-h1">International Best Sellers</h1>
-        <p className="bw-body">Popular picks from around the world (mocked data).</p>
-      </div>
-
-      <div className="bw-grid">
-        {bestSellers.map((b) => (
-          <BookCard key={b.id} book={b} />
-        ))}
-      </div>
-    </main>
-  );
-}
-
-function GenrePage({ genres, trendingBooks, bestSellers }) {
-  const params = useParams();
-  const navigate = useNavigate();
-  const genre = genres.find((g) => g.slug === params.slug);
-
-  // Simple mocked mapping: use tags/labels to pick a subset.
-  const dataset = useMemo(() => [...trendingBooks, ...bestSellers], [trendingBooks, bestSellers]);
-  const books = useMemo(() => {
-    if (!genre) return [];
-    const key = genre.name.toLowerCase();
-    return dataset
-      .filter((b) => (b.genre || '').toLowerCase().includes(key) || (b.tag || '').toLowerCase().includes(key))
-      .slice(0, 12);
-  }, [dataset, genre]);
-
-  if (!genre) {
-    return (
-      <main className="bw-container bw-page">
-        <h1 className="bw-h1">Genre not found</h1>
-        <p className="bw-body">That category doesn’t exist in the mocked list.</p>
-        <button type="button" className="bw-btn bw-btn--primary" onClick={() => navigate('/')}>
-          Back to home
-        </button>
-      </main>
-    );
-  }
-
-  return (
-    <main className="bw-container bw-page">
-      <div className="bw-pageHeader">
-        <h1 className="bw-h1">{genre.name}</h1>
-        <p className="bw-body">{genre.description}</p>
-      </div>
-
-      {books.length ? (
-        <div className="bw-grid">
-          {books.map((b) => (
-            <BookCard key={b.id} book={b} />
-          ))}
-        </div>
-      ) : (
-        <div className="bw-empty">No mocked books mapped to this genre yet.</div>
-      )}
-    </main>
-  );
-}
-
 function PlaceholderPage({ title, description }) {
   return (
     <main className="bw-container bw-page">
@@ -426,11 +312,108 @@ function PlaceholderPage({ title, description }) {
   );
 }
 
+function WishlistPage() {
+  const { state } = useShopStore();
+  const all = useMemo(() => getAllBooks(), []);
+  const wishlisted = useMemo(() => all.filter((b) => state.wishlistIds.includes(b.id)), [all, state.wishlistIds]);
+
+  return (
+    <ListingPage
+      title="Wishlist"
+      description="Your saved reads. (Stored locally in this browser.)"
+      books={wishlisted}
+      pageSize={9}
+    />
+  );
+}
+
+function CartPage() {
+  const { state, actions } = useShopStore();
+  const all = useMemo(() => getAllBooks(), []);
+
+  const cartItems = useMemo(() => {
+    const byId = state.cartById || {};
+    return Object.keys(byId)
+      .map((id) => {
+        const book = all.find((b) => b.id === id);
+        if (!book) return null;
+        return { book, qty: byId[id] };
+      })
+      .filter(Boolean);
+  }, [all, state.cartById]);
+
+  const total = useMemo(() => {
+    return cartItems.reduce((sum, item) => sum + item.book.price * item.qty, 0);
+  }, [cartItems]);
+
+  return (
+    <main className="bw-container bw-page">
+      <div className="bw-pageHeader">
+        <h1 className="bw-h1">Cart</h1>
+        <p className="bw-body">A lightweight cart (mocked checkout). Stored locally in this browser.</p>
+      </div>
+
+      {cartItems.length ? (
+        <>
+          <div className="bw-grid">
+            {cartItems.map((item) => (
+              <div key={item.book.id} className="bw-card">
+                <div className="bw-card__body">
+                  <div className="bw-card__titleRow">
+                    <div className="bw-card__title">{item.book.title}</div>
+                    <div className="bw-card__price">₹{item.book.price}</div>
+                  </div>
+                  <div className="bw-card__meta">
+                    <span className="bw-card__author">{item.book.author}</span>
+                    <span className="bw-card__dot" aria-hidden="true">
+                      •
+                    </span>
+                    <span className="bw-card__tag">Qty {item.qty}</span>
+                  </div>
+
+                  <div className="bw-card__actions">
+                    <button
+                      type="button"
+                      className="bw-btn bw-btn--ghost bw-btn--compact"
+                      onClick={() => actions.removeFromCart(item.book.id)}
+                    >
+                      Remove
+                    </button>
+                    <button
+                      type="button"
+                      className="bw-btn bw-btn--primary bw-btn--compact"
+                      onClick={() => actions.addToCart(item.book.id)}
+                    >
+                      Add one more
+                    </button>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          <div className="bw-callout">
+            <div className="bw-callout__title">Total: ₹{total}</div>
+            <div className="bw-callout__body">
+              This is a demo cart. Checkout is not implemented yet.
+              <div style={{ marginTop: 10 }}>
+                <button type="button" className="bw-btn bw-btn--ghost" onClick={actions.clearCart}>
+                  Clear cart
+                </button>
+              </div>
+            </div>
+          </div>
+        </>
+      ) : (
+        <div className="bw-empty">Your cart is empty. Add a book from any listing.</div>
+      )}
+    </main>
+  );
+}
+
 // PUBLIC_INTERFACE
 function App() {
-  /**
-   * Note: Env vars exist but may be empty; this step avoids relying on them.
-   */
+  /** Application entry: provides routes, catalog browsing, and Wishlist/Cart store. */
 
   const quotes = useMemo(
     () => [
@@ -444,142 +427,6 @@ function App() {
       'We read to know we are not alone.',
       'If you don’t like to read, you haven’t found the right book.',
       'So many books, so little time.'
-    ],
-    []
-  );
-
-  const trendingBooks = useMemo(
-    () => [
-      {
-        id: 't1',
-        title: 'The Silent Patient',
-        author: 'Alex Michaelides',
-        tag: 'Thriller',
-        genre: 'Crime & Thriller',
-        coverImageUrl: 'https://covers.openlibrary.org/b/isbn/9781250301697-L.jpg'
-      },
-      {
-        id: 't2',
-        title: 'Atomic Habits',
-        author: 'James Clear',
-        tag: 'Self-Help',
-        genre: 'Non-Fiction',
-        coverImageUrl: 'https://covers.openlibrary.org/b/isbn/9780735211292-L.jpg'
-      },
-      {
-        id: 't3',
-        title: 'The Alchemist',
-        author: 'Paulo Coelho',
-        tag: 'Classic',
-        genre: 'Fiction',
-        coverImageUrl: 'https://covers.openlibrary.org/b/isbn/9780061122415-L.jpg'
-      },
-      {
-        id: 't4',
-        title: 'Ikigai',
-        author: 'Héctor García',
-        tag: 'Wellness',
-        genre: 'Non-Fiction',
-        coverImageUrl: 'https://covers.openlibrary.org/b/isbn/9780143130727-L.jpg'
-      },
-      {
-        id: 't5',
-        title: 'The Girl on the Train',
-        author: 'Paula Hawkins',
-        tag: 'Suspense',
-        genre: 'Crime & Thriller',
-        coverImageUrl: 'https://covers.openlibrary.org/b/isbn/9781594633669-L.jpg'
-      },
-      {
-        id: 't6',
-        title: 'Sapiens',
-        author: 'Yuval Noah Harari',
-        tag: 'History',
-        genre: 'Non-Fiction',
-        coverImageUrl: 'https://covers.openlibrary.org/b/isbn/9780062316110-L.jpg'
-      },
-      {
-        id: 't7',
-        title: 'Norwegian Wood',
-        author: 'Haruki Murakami',
-        tag: 'Literary',
-        genre: 'Fiction',
-        coverImageUrl: 'https://covers.openlibrary.org/b/isbn/9780375704024-L.jpg'
-      }
-    ],
-    []
-  );
-
-  const bestSellers = useMemo(
-    () => [
-      {
-        id: 'b1',
-        title: 'Where the Crawdads Sing',
-        author: 'Delia Owens',
-        tag: 'Fiction',
-        genre: 'Fiction',
-        coverImageUrl: 'https://covers.openlibrary.org/b/isbn/9780735219090-L.jpg'
-      },
-      {
-        id: 'b2',
-        title: 'Educated',
-        author: 'Tara Westover',
-        tag: 'Memoir',
-        genre: 'Non-Fiction',
-        coverImageUrl: 'https://covers.openlibrary.org/b/isbn/9780399590504-L.jpg'
-      },
-      {
-        id: 'b3',
-        title: 'Becoming',
-        author: 'Michelle Obama',
-        tag: 'Biography',
-        genre: 'Non-Fiction',
-        coverImageUrl: 'https://covers.openlibrary.org/b/isbn/9781524763138-L.jpg'
-      },
-      {
-        id: 'b4',
-        title: 'The Kite Runner',
-        author: 'Khaled Hosseini',
-        tag: 'Fiction',
-        genre: 'Fiction',
-        coverImageUrl: 'https://covers.openlibrary.org/b/isbn/9781594480003-L.jpg'
-      },
-      {
-        id: 'b5',
-        title: 'The Da Vinci Code',
-        author: 'Dan Brown',
-        tag: 'Mystery',
-        genre: 'Crime & Thriller',
-        coverImageUrl: 'https://covers.openlibrary.org/b/isbn/9780307474278-L.jpg'
-      },
-      {
-        id: 'b6',
-        title: 'Thinking, Fast and Slow',
-        author: 'Daniel Kahneman',
-        tag: 'Business',
-        genre: 'Non-Fiction',
-        coverImageUrl: 'https://covers.openlibrary.org/b/isbn/9780374533557-L.jpg'
-      },
-      {
-        id: 'b7',
-        title: 'The Midnight Library',
-        author: 'Matt Haig',
-        tag: 'Fiction',
-        genre: 'Fiction',
-        coverImageUrl: 'https://covers.openlibrary.org/b/isbn/9780525559474-L.jpg'
-      }
-    ],
-    []
-  );
-
-  const genres = useMemo(
-    () => [
-      { slug: 'fiction', name: 'Fiction', description: 'Novels, stories, and imaginative worlds.' },
-      { slug: 'non-fiction', name: 'Non-Fiction', description: 'Ideas, history, memoirs, and practical reads.' },
-      { slug: 'indian-best-sellers', name: 'Indian Best Sellers', description: 'Beloved picks from Indian authors and readers.' },
-      { slug: 'international-best-sellers', name: 'International Best Sellers', description: 'Global favorites and chart-toppers.' },
-      { slug: 'crime-thriller', name: 'Crime & Thriller', description: 'Mystery, suspense, and page-turners.' },
-      { slug: 'business', name: 'Business', description: 'Work, productivity, and leadership.' }
     ],
     []
   );
@@ -609,27 +456,85 @@ function App() {
   }, [quotes.length]);
 
   return (
-    <div className="App bw-appShell">
-      <Header />
-      <Routes>
-        <Route
-          path="/"
-          element={<HomePage quote={quotes[quoteIndex]} trendingBooks={trendingBooks} bestSellers={bestSellers} genres={genres} />}
-        />
-        <Route path="/about" element={<AboutPage />} />
-        <Route path="/search" element={<SearchPage trendingBooks={trendingBooks} bestSellers={bestSellers} />} />
-        <Route path="/trending" element={<TrendingPage trendingBooks={trendingBooks} />} />
-        <Route path="/best-sellers" element={<BestSellersPage bestSellers={bestSellers} />} />
-        <Route path="/genre/:slug" element={<GenrePage genres={genres} trendingBooks={trendingBooks} bestSellers={bestSellers} />} />
+    <ShopStoreProvider>
+      <div className="App bw-appShell">
+        <Header />
+        <Routes>
+          <Route path="/" element={<HomePage quote={quotes[quoteIndex]} />} />
+          <Route path="/about" element={<AboutPage />} />
+          <Route path="/search" element={<SearchPage />} />
 
-        <Route path="/auth" element={<PlaceholderPage title="Sign In / Login" description="Authentication UI placeholder." />} />
-        <Route path="/contact" element={<PlaceholderPage title="Contact Us" description="Contact page placeholder." />} />
-        <Route path="/infringement" element={<PlaceholderPage title="Infringement" description="Infringement policy placeholder." />} />
+          <Route
+            path="/trending"
+            element={
+              <ListingPage
+                title="Trending"
+                description="A quick snapshot of what readers are picking up right now."
+                books={trendingBooks}
+                pageSize={9}
+              />
+            }
+          />
+          <Route
+            path="/global"
+            element={
+              <ListingPage
+                title="International / Global Best Sellers"
+                description="Popular picks from around the world (mocked data)."
+                books={globalBestSellers}
+                pageSize={9}
+              />
+            }
+          />
+          <Route
+            path="/international"
+            element={
+              <ListingPage
+                title="International / Global Best Sellers"
+                description="Popular picks from around the world (mocked data)."
+                books={globalBestSellers}
+                pageSize={9}
+              />
+            }
+          />
 
-        <Route path="*" element={<PlaceholderPage title="Page not found" description="The page you’re looking for doesn’t exist." />} />
-      </Routes>
-      <Footer />
-    </div>
+          <Route
+            path="/fast"
+            element={
+              <ListingPage
+                title="Fast Browse"
+                description="A simple grid of the full catalog for quick scanning."
+                books={getAllBooks()}
+                pageSize={12}
+              />
+            }
+          />
+
+          <Route path="/genres" element={<GenresHubPage genres={genres} />}>
+            <Route
+              index
+              element={
+                <section className="bw-nested__panel">
+                  <h2 className="bw-h2">Pick a shelf</h2>
+                  <p className="bw-body">Select a genre above to see all books in that category.</p>
+                </section>
+              }
+            />
+            <Route path=":slug" element={<GenreListingPage genres={genres} />} />
+          </Route>
+
+          <Route path="/wishlist" element={<WishlistPage />} />
+          <Route path="/cart" element={<CartPage />} />
+
+          <Route path="/auth" element={<PlaceholderPage title="Sign In / Login" description="Authentication UI placeholder." />} />
+          <Route path="/contact" element={<PlaceholderPage title="Contact Us" description="Contact page placeholder." />} />
+          <Route path="/infringement" element={<PlaceholderPage title="Infringement" description="Infringement policy placeholder." />} />
+
+          <Route path="*" element={<PlaceholderPage title="Page not found" description="The page you’re looking for doesn’t exist." />} />
+        </Routes>
+        <Footer />
+      </div>
+    </ShopStoreProvider>
   );
 }
 
