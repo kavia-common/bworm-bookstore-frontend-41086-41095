@@ -1,2 +1,2 @@
-{ "working_directory": "/home/kavia/workspace/code-generation",
- "command": "npm install && npx tsc --noEmit && npm test -- --ci" }
+{ "working_directory": "/home/kavia/workspace/code-generation/copy-of-bworm-bookstore-frontend-bworm-bookstore-frontend-41086-41095-41174/frontend_bworm",
+ "command": "npm install && npm test -- --ci" }
